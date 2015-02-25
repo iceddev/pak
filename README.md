@@ -1,0 +1,2 @@
+# pak
+Plugin registration framework
