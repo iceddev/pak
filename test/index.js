@@ -5,13 +5,29 @@ var code = require('code');
 
 var Pak = require('../');
 
-function plugin(cb){
-  cb(null, 'test');
-}
-
 lab.experiment('Pak', function(){
 
   var pak;
+
+  function plugin(app, opts, cb){
+    code.expect(app).to.equal(pak);
+    cb();
+  }
+
+  var options = {
+    my: 'option'
+  };
+
+  function withOptions(app, opts, cb){
+    code.expect(app).to.equal(pak);
+    code.expect(opts).to.deep.equal(options);
+    cb();
+  }
+
+  var pluginWithOptions = {
+    register: withOptions,
+    options: options
+  };
 
   lab.beforeEach(function(done){
     pak = new Pak();
@@ -19,8 +35,19 @@ lab.experiment('Pak', function(){
   });
 
   lab.test('#register', function(done){
-    pak.register(plugin, function(){
-      done();
-    });
+    pak.register(plugin, done);
+  });
+
+  lab.test('#register with options', function(done){
+    // we aren't using options yet
+    pak.register(plugin, {}, done);
+  });
+
+  lab.test('#register with object', function(done){
+    pak.register(pluginWithOptions, done);
+  });
+
+  lab.test('#register with array of plugins', function(done){
+    pak.register([plugin, pluginWithOptions], done);
   });
 });
