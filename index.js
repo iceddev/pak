@@ -17,7 +17,7 @@ Pak.prototype._normalizePlugin = function normalizePlugin(plugin){
     options = {};
   } else {
     fn = plugin.register;
-    options = clone(plugin.options);
+    options = plugin.options ? clone(plugin.options) : {};
   }
 
   return function(cb){

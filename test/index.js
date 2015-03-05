@@ -11,6 +11,7 @@ lab.experiment('Pak', function(){
 
   function plugin(app, opts, cb){
     code.expect(app).to.equal(pak);
+    code.expect(opts).to.deep.equal({});
     cb();
   }
 
@@ -29,6 +30,10 @@ lab.experiment('Pak', function(){
     options: options
   };
 
+  var pluginWithoutOptions = {
+    register: plugin
+  };
+
   lab.beforeEach(function(done){
     pak = new Pak();
     done();
@@ -43,8 +48,12 @@ lab.experiment('Pak', function(){
     pak.register(plugin, {}, done);
   });
 
-  lab.test('#register with object', function(done){
+  lab.test('#register with object including options', function(done){
     pak.register(pluginWithOptions, done);
+  });
+
+  lab.test('#register with object without options', function(done){
+    pak.register(pluginWithoutOptions, done);
   });
 
   lab.test('#register with array of plugins', function(done){
